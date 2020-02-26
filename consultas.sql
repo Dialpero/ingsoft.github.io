@@ -222,4 +222,4 @@ select * from facultad;
 select * from institucion;
 select * from departamento;
 select * from academico;
-select * from secretaria;
+/*select * from secretaria;*/
