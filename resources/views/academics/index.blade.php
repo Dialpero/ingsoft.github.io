@@ -10,12 +10,13 @@
     <div class="d-flex justify-content-between align-items-center">
     <h1 class="display-4 mb-0">Académicos</h1>
     @auth
-    @if(Auth::user()->estado=='activo' or Auth::user()->typeuser=='Administrador')
+    @if(Auth::user()->estado=='activo' && Auth::user()->typeuser=='Secretaria' or Auth::user()->typeuser=='Administrador')
     <div class="btn-group btn-group-sm">
         <a class="btn btn-primary" href="{{ route('academics.create') }}">Ingresar académico</a> 
         <a class="btn btn-primary" href="{{ route('evaluaciones.index') }}">Ir a Pautas de evaluación</a> 
     </div>
     @endif
+
     @endauth
     </div>
     <hr>

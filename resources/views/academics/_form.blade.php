@@ -1,12 +1,4 @@
 @csrf 
-<div class="form-group row">
-    <div class="col-md-4">
-        <label for="title">Rut *</label>
-            <input class="form-control border-0 bg-light shadow-sm"
-                type="text" name="rut" value="{{ old('rut', $academic->rut) }}">       
-    
-    </div>
-
     <div class="col-md-4">
         <label for="title">Primer Nombre *</label>
             <input class="form-control border-0 bg-light shadow-sm"
@@ -21,6 +13,7 @@
     
     </div>
 </div>
+
 <div class="form-group row">
     <div class="col-md-4">
         <label for="title">Primer Apellido *</label>

@@ -21,6 +21,8 @@
             <a class="text-secondary d-flex justify-content-between align-items-center" href="{{ route('departamentos.indiv', $departamentosItem)}}"> 
                 <span class="font-weight-bold">     
                 Nombre: {{ $departamentosItem->nombre }}
+                <br>
+                Facultad: {{ $departamentosItem->facultad }}
                 </span>
                 <span class="text-black-50"> 
                 {{ $departamentosItem->created_at->format('d/m/Y')}} 
