@@ -10,7 +10,7 @@
     <div class="d-flex justify-content-between align-items-center">
     <h1 class="display-4 mb-0">Departamentos</h1>
     @auth
-        <a class="btn btn-primary" href="{{ route('departamentos.add_departamentos') }}">Ingresar académico</a> 
+        <a class="btn btn-primary" href="{{ route('departamentos.add_departamentos') }}">Ingresar departamento</a> 
     @endauth
     </div>
     <hr>

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
@@ -50,7 +50,6 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'typeuser'=>['required', 'string', 'max:50'],
-            'estado'=>['required', 'string', 'max:50'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -63,13 +62,14 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'typeuser'=> $data['typeuser'],
             'estado'=> $data['estado'],
             'password' => Hash::make($data['password']),
         ]);
+        return view('/home');
     }
 
     public function index()
@@ -79,6 +79,34 @@ class RegisterController extends Controller
         return view('usuarios.show',compact('usuarios'));
     }
 
-    
+    public function edit(User $usuario)
+    {
+        return view('usuarios.edit',[ 
+            'usuario' =>  $usuario
+        ]);
+    }
+
+    public function update(user $usuarios)
+    {   
+        $usuarios->update([
+            'name' => request('name'),
+            'password' => Hash::make(request('password')),
+        ]);
+
+        return view('/home');
+
+    }
+
+    public function eliminar($id)
+    {   
+        $usuaris = User::find($id);
+        $usuaris->delete();
+        
+        $usuarios = user::get();
+
+        return view('usuarios.show',compact('usuarios'));
+
+    }
+
 
 }

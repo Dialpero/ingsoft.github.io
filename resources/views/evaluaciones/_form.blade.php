@@ -60,7 +60,7 @@
 <div class="col-md-6">
     <label for="title">Calificacion Final</label>
         <input class="form-control border-0 bg-light shadow-sm"
-            type="text" name="calificacion_final" value="{{ old('calificacion_final', $evaluacion->calificacion_final) }}">       
+            type="text" placeholder="Rango nota 1.0 a 7.0" name="calificacion_final" value="{{ old('calificacion_final', $evaluacion->calificacion_final) }}">       
 </div>
 <div class="col-md-6"> 
     <label for="title">Observaciones</label>

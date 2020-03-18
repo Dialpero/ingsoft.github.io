@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
-
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SaveAcademicRequest extends FormRequest
@@ -24,7 +24,7 @@ class SaveAcademicRequest extends FormRequest
     public function rules() 
     {
         return [
-            'rut' => 'required',
+            'rut' => ['required', Rule::unique('academics', 'rut')->ignore($this->academic)],
             'nombre_1' => 'required',
             'apellido_1' => 'required',
             'titulo' => 'required',

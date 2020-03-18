@@ -22,8 +22,10 @@ class departamentoController extends Controller
 
     public function indiv(Departamento $departamento)
     {
+        $usuarios = user::get();
         return view('departamentos.indiv', [
-            'departamento' => $departamento
+            'departamento' => $departamento,
+            'usuarios' => $usuarios
             ]);
     }
     
@@ -43,29 +45,67 @@ class departamentoController extends Controller
             'estado'=>request('estado'),
             'id_Secretaria' => request('id_Secretaria'),
         ]);
+        return redirect()->route('departamentos.temporal');
+    }
+
+    public function temp()
+    {
+        $departamento = departamento::latest()->get();
+        $usuarios = user::get();
+        foreach($usuarios as $us){
+            if($us->id == $departamento[0]->id_Secretaria){
+                $us->update([
+                    'estado' => 'activo',
+                ]);
+            }
+        }
         return redirect()->route('departamentos.show');
     }
 
     public function edit(Departamento $departamento)
     {
+        $usuarios = user::get();
         return view('departamentos.edit', [
-        'departamento' => $departamento
+        'departamento' => $departamento,
+        'usuarios' => $usuarios
         ]);
     }
 
     public function update(Departamento $departamento)
     {
+        $usuarios = user::get();
         $departamento->update([
             'nombre' => request('nombre'),
             'estado' => request('estado'),
             'id_Secretaria' => request('id_Secretaria'),
         ]);
+        foreach($usuarios as $us){
+            if($us->id == $departamento->id_Secretaria){
+                $us->update([
+                    'estado' => 'Activo'
+                ]);
+            }
+        }
         return redirect()->route('departamentos.show');
     }
 
     public function destroy(Departamento $departamento)
     {
         $departamento->delete();
+        return redirect()->route('departamentos.show');
+    }
+
+    public function usermod(User $usuario)
+    {
+        $departamentos = departamento::get();
+        foreach($departamentos as $dep){
+            if($dep->id_Secretaria == $usuario->id){
+                $usuario->update([
+                    'estado' => 'Inactivo',
+                ]);
+                $dep->delete();
+            }
+        }
         return redirect()->route('departamentos.show');
     }
 }

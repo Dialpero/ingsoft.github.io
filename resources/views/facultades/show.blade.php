@@ -6,13 +6,17 @@
 
 @section('content')
     @if($facultades)
+    
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
             <h1 class="display-4 mb-0">Facultades</h1>
-        </div>
+        
         @auth
+        @if(Auth::user()->typeuser=='Administrador')
             <a class="btn btn-primary" href="{{ route('facultades.add_facultad') }}">Ingresar Facultad</a> 
+        @endif
         @endauth
+        </div>
         <hr>
         <p class="lead text-secondary">Facultades actuales</p>
     </div>

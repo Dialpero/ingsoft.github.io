@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\evaluacion;
+use App\departamento;
 use App\Http\Requests\SaveEvaluacionRequest;
 use App\Http\Requests\SaveAcademicRequest;
 use App\Http\Controller\AcademicController;
 use App\Academic;
+use App\Charts\UserChart;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 
@@ -15,6 +18,48 @@ class evaluacionController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->except('index', 'show');
+    }
+
+    public function pdf()
+    {        
+        /**
+         * toma en cuenta que para ver los mismos 
+         * datos debemos hacer la misma consulta
+        **/
+        $evaluaciones = evaluacion::all(); 
+
+        $pdf = \PDF::loadView('pdf.evaluacion', compact('evaluaciones'));
+
+        return $pdf->download('Evaluaciones_generales.pdf');
+    }
+
+    public function vertodo()
+    {
+        $evaluaciones = evaluacion::get();
+        return view('evaluacion',[
+            'evaluaciones' =>  $evaluaciones
+        ]);
+    }
+
+    
+    public function vertodop($rut)
+    {
+        $academic = academic::where('rut', $rut)->get();
+        $evaluaciones = evaluacion::get();
+        return view('evaluacionp',compact('evaluaciones','academic'));
+    }
+
+    public function pdfp($rut)
+    {        
+        /**
+         * toma en cuenta que para ver los mismos 
+         * datos debemos hacer la misma consulta
+        **/
+        $evaluaciones = evaluacion::all(); 
+        $academic = academic::where('rut', $rut)->get();
+        $pdf = \PDF::loadView('pdf.evaluacionp', compact('evaluaciones','academic'));
+
+        return $pdf->download('Evaluacion_personal.pdf');
     }
 
     public function promedio(){
@@ -41,18 +86,95 @@ class evaluacionController extends Controller
             ]);
         }
         $academics = academic::orderBy('promedio','DESC')->get();
-        return view('evaluaciones.promedio', compact('academics'));
+        //Gráfico 2  
+        // Instanciamos el objeto gráfico 
+        $chart_bar = new UserChart;
+        // Añadimos las etiquetas del eje X
+        $label = array();
+        $promedios = array();
+        foreach($academics as $dato){
+            if(empty($academics)){
+                break;
+            }
+            array_push($label, $dato->rut);
+            array_push($promedios, $dato->promedio);
+        }
+        
+        $chart_bar->labels(["Académicos"]);
+
+        if(count($label) === 0){
+            $chart_bar->dataset("No existen académicos o evaluaciones aún!", 'bar', [0]);
+        }
+        else{
+            for ($i=0; $i < count($label); $i++) { 
+                $color = 'rgba('. implode(",",array(rand(0, 255),rand(0, 255),rand(0, 255),0.7)). ')';
+                $chart_bar->dataset((string)$label[$i]. ". Promedio", 'bar', [$promedios[$i]])->backgroundColor($color);
+            }
+        }
+
+        //Gráfico 3  
+        $chart_pie = new UserChart;
+        // Añadimos las etiquetas del eje X
+        $label = ['Muy deficiente','Deficiente','Regular','Bueno','Muy bueno'];
+        $muy_deficiente = array(); // muy deficiente(1-3)
+        $deficiente = array();//deficiente(3.1-4)
+        $regular = array();// regular(4.1-5)
+        $bueno = array();// bueno(5.1-6)
+        $muy_bueno = array();// muy bueno(6.1-7)
+        
+        foreach($academics as $dato){ 
+            if(empty($academics)){
+                break;
+            }
+            elseif($dato->promedio >= 1.0 && $dato->promedio <= 3.0){
+                array_push($muy_deficiente, $dato->rut);
+            }
+            elseif($dato->promedio >= 3.1 && $dato->promedio <= 4.0){
+                array_push($deficiente, $dato->rut);
+            }
+            elseif($dato->promedio >= 4.1 && $dato->promedio <= 5.0){
+                array_push($regular, $dato->rut);
+            }
+            elseif($dato->promedio >= 5.1 && $dato->promedio <= 6.0){
+                array_push($bueno, $dato->rut);
+            }
+            elseif($dato->promedio >= 6.1 && $dato->promedio <= 7.0){
+                array_push($muy_bueno, $dato->rut);
+            }
+        }
+        $promedios = [count($muy_deficiente),count($deficiente),count($regular),count($bueno),count($muy_bueno)];
+        $chart_pie->labels($label);
+        $chart_pie->dataset('Cantidad', 'pie', $promedios)->backgroundColor('rgba(0,100,255,0.9)');
+
+        return view('evaluaciones.promedio', compact('academics', 'chart_bar', 'chart_pie'));
     }
 
 
     
     public function index()
     {
-        
+        if(Auth::user()->typeuser == 'Secretaria'){ 
+            $id = Auth::user()->id; //Obtiene id de secretario actual logeado
+            $depto = departamento::where('id_Secretaria', $id)->get(); //obtiene el depto de la secretaria
+            $deptoAcademico = $depto[0]['id_Dept'];
+            $datos = array();
+            foreach(evaluacion::get() as $infoEval){
+                foreach (Academic::where('depto', $deptoAcademico)->get() as $infoAcad) {
+                    if($infoAcad->rut == $infoEval->rut_academico){
+                        array_push($datos, $infoEval);
+                    }
+                }
+            }
+            return view('evaluaciones.index', [
+                'evaluaciones' => $datos
+            ]);
+
+        }
         return view('evaluaciones.index', [
-            'evaluaciones' => evaluacion::get()
+            'evaluaciones' => evaluacion::latest()->paginate(8)
         ]);
     }
+    
 
     public function show($id)
     {
@@ -60,6 +182,8 @@ class evaluacionController extends Controller
             'evaluacion' =>  evaluacion::findOrFail($id)
         ]);
     }
+
+    
 
     public function createEvaluation($id)
     {

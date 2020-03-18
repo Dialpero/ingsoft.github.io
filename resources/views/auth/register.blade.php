@@ -44,7 +44,7 @@
                             <div class="form-group">
                                 <label for="typeuser" class="col-md-6 col-form-label text-md-right">{{ __('Tipo de usuario') }}
                                 <select id="typeuser" type="typeuser" class="form-control @error('typeuser') is-invalid @enderror" name="typeuser" value="{{ old('typeuser') }}" required autocomplete="typeuser">
-                                    <option> Admin </option>
+                                    <option> Administrador </option>
                                     <option> Secretaria </option>
                                     <option> Decano </option>
                                     <option> Miembro comision evaluadora </option>
@@ -58,8 +58,7 @@
                                 @enderror
 
                                 <label for="estado" class="col-md-5 col-form-label text-md-right" >{{ __('Estado') }}
-                                <select id="estado" type="estado" class="form-control @error('estado') is-invalid @enderror" name="estado" value="{{ old('estado') }}" required autocomplete="estado">
-                                    <option> Activo </option>
+                                <select id="estado" type="estado" class="form-control @error('estado') is-invalid @enderror" name="estado" value="Inactivo" required autocomplete="estado">
                                     <option> Inactivo </option>
                                 </select>
                                 </label>

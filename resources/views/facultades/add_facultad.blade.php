@@ -5,15 +5,16 @@
 @endsection
 
 @section('content')
-    
+
+
     <div class="container">
     <h1> Añadir nueva facultad</h1>
         <form method="POST" action="{{ route('facultad.store') }}" class="was-validated">
-        @csrf
+        @csrf 
         <div class="d-flex justify-content-between align-items-center">
-    <h1 class="display-4 mb-0">Facultades</h1>
-    @auth
+   
         
+    @auth    
     @endauth
     </div>
     <hr>
@@ -25,7 +26,7 @@
         <select class="form-control" id="exampleFormControlSelect1" name="id_Decano" required>
         @forelse ($usuarios as $usuariosItem)
             @if($usuariosItem->typeuser == 'Decano' and $usuariosItem->estado == 'Inactivo')
-                <option>{{ $usuariosItem->id}} </option>
+                <option>{{ $usuariosItem->id}}</option>
                 
                 
             @endif
@@ -34,11 +35,11 @@
             <li class="list-group-item border-0 mb-3 shadow-sm">
                 No hay usuario disponibles
             </li>
-            @endforelse
-    </select>
-    </div>        
-    </ul>
-
+        @endforelse
+        
+        </select>
+        </div>        
+        </ul>   
     <div class="container">
 
   
@@ -58,4 +59,6 @@
             <button type="submit" class="btn btn-primary">Agregar</button>
         </form>
     </div>
+    
+       
 @endsection

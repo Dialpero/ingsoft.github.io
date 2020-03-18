@@ -5,21 +5,18 @@
   <!-- Brand -->
   <!-- Links -->
   <ul class="navbar-nav">
+  @if(Auth::user()->typeuser=='Administrador')
     <li class="nav-item">
       <a class="nav-link" href="{{ route('academics.index') }}">Académicos</a>
     </li>
-
-    <li class="nav-item">
+    <li class="nav-item">   
       <a class="nav-link" href="{{ route('departamentos.show') }}">Departamentos</a>
     </li>
-
     <li class="nav-item">
       <a class="nav-link" href="{{ route('facultades.show') }}">Facultades</a>
     </li>
-
     <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown" >Usuarios</a>         
- 
             <div class="dropdown-menu">
                 <a class="dropdown-item" href="{{ route('register') }}">Agregar usuario</a>
                 <form method="POST" action="{{ route('show') }}">
@@ -27,22 +24,40 @@
                     <div class="form-group">
                                 <button type="submit" class="btn ">
                                     {{('   Ver Usuarios') }}
-                                
                                 </button>
                     </div>
                 </form>
-
             </div>
             </li>
-
-
-            
-      
-
-          
+  @elseif(Auth::user()->typeuser=='Secretaria' or Auth::user()->typeuser == 'Miembro comision evaluadora')
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('academics.index') }}">Académicos</a>
+      </li>
+      <li class="nav-item">
+      <a class="nav-link" href="{{ route('facultades.show') }}">Facultades</a>
+    </li>
+  @elseif(Auth::user()->typeuser=='Decano')         
+    <li class="nav-item">
+      <a class="nav-link" href="{{ route('academics.index') }}">Académicos</a>
+    </li>
+    <li class="nav-item">   
+      <a class="nav-link" href="{{ route('departamentos.show') }}">Departamentos</a>
+    </li>
+    <li class="nav-item">
+    <li class="nav-item">
+      <a class="nav-link" href="{{ route('facultades.show') }}">Facultades</a>
+    </li>
+  @elseif(Auth::user()->typeuser=='Director de escuela')
+    <li class="nav-item">
+      <a class="nav-link" href="{{ route('academics.index') }}">Académicos</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{{ route('facultades.show') }}">Facultades</a>
+    </li>
+  @endif        
                                                                                                                                                                                                                        
-            <div  style="width:30px">
-              <img src="{{asset('herramienta1.png')}}" class="img-fluid" alt="Responsive image">
+            <div  style="width:27px">
+              <img src="{{asset('user.png')}}" class="img-fluid" alt="Responsive image">
             </div>
             <li class="nav-item dropdown ">
               <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">

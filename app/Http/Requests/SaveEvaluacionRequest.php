@@ -39,7 +39,7 @@ class SaveEvaluacionRequest extends FormRequest
             'extension_nota' => 'required | numeric',
             'administracion_nota' => 'required | numeric',
             'otras_nota' => 'required | numeric',
-            'calificacion_final' => 'required | numeric',
+            'calificacion_final' => 'required | numeric | max:7.0 | min:1.0',
             'observacion_final' => 'required',
         ];
     }

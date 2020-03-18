@@ -57,22 +57,29 @@
     </div>
     <div class="col-md-2">
         <label for="title">Departamento *</label>
+        @if(Auth::user()->typeuser=='Administrador')
+            <select class="form-control border-0 bg-light shadow-sm"
+                type="text" name="depto" value="{{  old('depto', $academic->depto) }}">
+                @foreach($deptoAcademico as $dato)
+                    <option> {{ $dato['id_Dept'] }} </option>
+                @endforeach
+            </select>
+        @else
             <input class="form-control border-0 bg-light shadow-sm"
-                type="text" name="depto" value="{{ old('depto', $academic->depto) }}">       
-    
+                type="text" name="depto" value="{{ $depto_secretario }}" readonly="readonly">        
+        @endif
     </div>
 
 
     <div class="col-md-2">
         <div class="form-group">
-            <label for="categoria" >{{ __('Categoría') }}
-                <select id="categoria" type="text" class="form-control " name="categoria"  required >
+            <label for="categoria" >{{ __('Categoría') }}</label>
+                <select id="categoria" type="text" class="form-control border-0 bg-light shadow-sm" name="categoria"  required >
                     <option> Instructor </option>
                     <option> Auxiliar </option>
                     <option> Adjunto </option>
                     <option> Titular </option>
                 </select>
-            </label>
         </div>
     </div>
 
@@ -92,12 +99,11 @@
 
     <div class="col-md-2">
         <div class="form-group ">
-            <label for="estado" >{{ __('Estado') }}
-                <select id="estado" type="estado" class="form-control " name="estado"  required autocomplete="estado">
+            <label for="estado" >{{ __('Estado') }}</label>
+                <select id="estado" type="estado" class="form-control border-0 bg-light shadow-sm " name="estado"  required autocomplete="estado">
                     <option> Activo </option>
                     <option> Inactivo </option>
                 </select>
-            </label>
         </div>
     </div>
 </div>
